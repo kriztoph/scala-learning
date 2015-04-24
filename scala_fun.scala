@@ -36,8 +36,29 @@ object ScalaFun {
 	
 	//used to sort in above HOF
 	def ordered(i: Int, j: Int): Boolean = {
-     	if (i < j) true
+     	if (i <= j) true
 		else false
+	}
+	
+	//following types to implementations
+	//2.3
+	def curry[A, B, C](f: (A, B) => C): A => (B => C) = {
+		(a: A) => (
+			(b: B) => (
+				f(a, b)
+				)
+			)
+	}
+	
+	//2.4
+	def uncurry[A,B,C](f: A => B => C): (A, B) => C = {
+		(a: A, b: B) => f(a)(b)
+	}
+	
+	//2.5
+	def compose[A,B,C](f: B => C, g: A => B): A => C = {
+		//need to pass f to g, f(g) == A, err., A == f(g), C == g(f), f(g) => g(f) == f(g(x))
+		(a: A) => f(g(a))
 	}
 	
 	def main(args: Array[String]): Unit = {
@@ -50,6 +71,11 @@ object ScalaFun {
 		
 	    println(
 			isSorted[Int](Array(3, 2, 3), ordered)
+			)
+			
+		//calling HOF with anon function
+		println(
+			isSorted[Int](Array(2, 2, 3), (x: Int, y: Int) => x <= y)
 			)
 		// print("println(isSorted(Array(1, 2, 4, 6, 7, 1))): ")
 		// println(isSorted(Array(1, 2, 4, 6, 7, 1), sorted()))
